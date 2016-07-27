@@ -532,6 +532,15 @@ abstract class File implements FileInterface
             $filename = $this->filename;
         }
 
+        $file_content = $this->getContent($writeBOM);
+
+        $res = file_put_contents($filename, $file_content);
+        if (!$res) {
+            throw new \Exception('Unable to save the file.');
+        }
+    }
+
+    public function getContent($writeBOM = false) {
         if (trim($this->fileContent) == '') {
             $this->build();
         }
@@ -549,10 +558,7 @@ abstract class File implements FileInterface
             $file_content = "\xef\xbb\xbf".$file_content;
         }
 
-        $res = file_put_contents($filename, $file_content);
-        if (!$res) {
-            throw new \Exception('Unable to save the file.');
-        }
+        return $file_content;
     }
 
     /**
